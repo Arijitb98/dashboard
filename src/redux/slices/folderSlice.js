@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { dummyFolders } from "../DummyData/dummyData";
 import axios from "axios";
 
 // API Base URL
@@ -8,8 +9,11 @@ const API_BASE_URL = "http://localhost:5000/api"; // Replace with your API's bas
 export const fetchFolders = createAsyncThunk(
   "folders/fetchFolders",
   async () => {
-    const response = await axios.get(`${API_BASE_URL}/records`);
-    return response.data; // Assuming the API returns the folder structure
+    // const response = await axios.get(`${API_BASE_URL}/records`);
+    // return response.data; // Assuming the API returns the folder structure
+
+    //-- Returning dummy data
+    return dummyFolders;
   }
 );
 
