@@ -1,101 +1,182 @@
-import React from "react";
-import { Box, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  fetchFolders,
+  selectFolders,
+  selectStatus,
+} from "../redux/slices/folderSlice";
+import {
+  List,
+  ListItem,
+  ListItemText,
+  ListSubheader,
+  CircularProgress,
+  Collapse,
+  Box,
+  IconButton,
+} from "@mui/material";
+import { ReactComponent as FolderIcon } from "../assets/Icons/stageFile.svg";
+import { ReactComponent as WordIcon } from "../assets/Icons/word.svg";
+import { ReactComponent as ExpandMoreIcon } from "../assets/Icons/chevron-right.svg";
+import { ReactComponent as ExpandLessIcon } from "../assets/Icons/chevron-down.svg";
+import { ReactComponent as RightArrowIcon } from "../assets/Icons/rightArrow.svg";
 
-// Import SVGs as React components
-import { ReactComponent as PanoramaIcon } from "../assets/Icons/panorama.svg";
-import { ReactComponent as TransactionIcon } from "../assets/Icons/transaction.svg";
-import { ReactComponent as DocumentsIcon } from "../assets/Icons/Documents.svg";
-import { ReactComponent as EmailsIcon } from "../assets/Icons/email.svg";
-import { ReactComponent as ReportsIcon } from "../assets/Icons/report.svg";
-import { ReactComponent as ManagementPanelIcon } from "../assets/Icons/managementPanel.svg";
-import { ReactComponent as TransactionCalendarIcon } from "../assets/Icons/transactionCalander.svg";
-import { ReactComponent as UserCircle } from "../assets/Icons/user-circle.svg";
-import { ReactComponent as MuamelatLogo } from "../assets/Icons/Muamelat logo.svg";
+const Sidebar = ({ expandedFolderIds, onFolderToggle, onClose }) => {
+  const dispatch = useDispatch();
+  const folders = useSelector(selectFolders);
+  const status = useSelector(selectStatus);
 
-const LeftSidebar = () => {
-  const menuItems = [
-    { label: "Panorama", icon: <PanoramaIcon width={20} height={20} /> },
-    { label: "Transaction", icon: <TransactionIcon width={20} height={20} /> },
-    { label: "Documents", icon: <DocumentsIcon width={20} height={20} /> },
-    { label: "E-Mails", icon: <EmailsIcon width={20} height={20} /> },
-    { label: "Reports", icon: <ReportsIcon width={20} height={20} /> },
-    {
-      label: "Management Panel",
-      icon: <ManagementPanelIcon width={20} height={20} />,
-    },
-    {
-      label: "Transaction Calendar",
-      icon: <TransactionCalendarIcon width={20} height={20} />,
-    },
-  ];
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchFolders());
+    }
+  }, [status, dispatch]);
+
+  if (status === "loading") {
+    return <CircularProgress />;
+  }
+
+  if (status === "failed") {
+    return <p>Error loading folders. Please try again later.</p>;
+  }
 
   return (
     <Box
+      display="flex"
+      flexDirection="column"
       sx={{
-        width: "70px", // Adjust as per design
-        backgroundColor: "#00274d", // Match the dark blue background
+        width: "250px",
+        backgroundColor: "#f4f4f4",
         height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "16px 0",
+        borderRight: "1px solid #ddd",
+        position: "relative",
       }}
     >
-      {/* Logo Section */}
-      <Box sx={{ width: "40px", marginBottom: "16px" }}>
-        <MuamelatLogo style={{ width: "100%", height: "auto" }} />
+      {/* Header with Close Button */}
+      <Box display="flex" alignItems="center" justifyContent="space-between">
+        <ListSubheader
+          sx={{
+            fontSize: "16px",
+            fontWeight: "bold",
+            color: "#333",
+            backgroundColor: "#f4f4f4",
+            padding: "16px",
+          }}
+        >
+          Transaction Contents
+        </ListSubheader>
+        <IconButton onClick={onClose} sx={{ marginRight: "8px" }}>
+          <RightArrowIcon width={20} height={20} />
+        </IconButton>
       </Box>
 
-      {/* Menu Items */}
-      <List sx={{ flexGrow: 1, width: "100%", padding: 0 }}>
-        {menuItems.map((item, index) => (
-          <ListItem
-            button
-            key={index}
-            sx={{
-              flexDirection: "column",
-              alignItems: "center",
-              padding: "12px 0",
-              color: "white",
-              "&:hover": { backgroundColor: "#004080" },
-            }}
-          >
-            <ListItemIcon
+      {/* Summary Section */}
+      <Box
+        display="flex"
+        justifyContent="space-around"
+        alignItems="center"
+        padding={1}
+        sx={{
+          backgroundColor: "#ffffff",
+          borderBottom: "1px solid #ddd",
+        }}
+      >
+        <Box textAlign="center">
+          <Box fontWeight="bold" fontSize="16px">
+            {folders.length}
+          </Box>
+          <Box fontSize="12px" color="#555">
+            Stages
+          </Box>
+        </Box>
+        <Box textAlign="center">
+          <Box fontWeight="bold" fontSize="16px">
+            {folders.reduce(
+              (total, folder) => total + (folder.subPhases?.length || 0),
+              0
+            )}
+          </Box>
+          <Box fontSize="12px" color="#555">
+            Subfolders
+          </Box>
+        </Box>
+        <Box textAlign="center">
+          <Box fontWeight="bold" fontSize="16px">
+            {folders.reduce(
+              (total, folder) =>
+                total + (folder.subPhases?.documentsCount || 0),
+              0
+            )}
+          </Box>
+          <Box fontSize="12px" color="#555">
+            Documents
+          </Box>
+        </Box>
+      </Box>
+
+      {/* Folder List */}
+      <List sx={{ flex: 1, overflowY: "auto" }}>
+        {folders.map((folder) => (
+          <React.Fragment key={folder.id}>
+            <ListItem
+              button
+              onClick={() => onFolderToggle(folder.id)}
               sx={{
-                justifyContent: "center",
-                minWidth: "unset",
-                marginBottom: "8px",
+                padding: "8px 16px",
+                display: "flex",
+                alignItems: "center",
+                backgroundColor: expandedFolderIds.includes(folder.id)
+                  ? "#e6f7ff"
+                  : "transparent",
+                "&:hover": { backgroundColor: "#f0f0f0" },
               }}
             >
-              {item.icon}
-            </ListItemIcon>
-            <ListItemText
-              primary={item.label}
-              sx={{
-                textAlign: "center",
-                fontSize: "12px",
-                color: "white",
-                fontWeight: "500",
-              }}
-            />
-          </ListItem>
+              <FolderIcon style={{ marginRight: "8px" }} />
+              <ListItemText
+                primary={folder.phase || `Stage ${folder.serialNo}`}
+                sx={{ fontSize: "14px", color: "#333", fontWeight: "500" }}
+              />
+              {expandedFolderIds.includes(folder.id) ? (
+                <ExpandLessIcon style={{ marginLeft: "auto" }} />
+              ) : (
+                <ExpandMoreIcon style={{ marginLeft: "auto" }} />
+              )}
+            </ListItem>
+            <Collapse
+              in={expandedFolderIds.includes(folder.id)}
+              timeout="auto"
+              unmountOnExit
+            >
+              <List component="div" disablePadding>
+                {folder.subPhases?.map((subPhase) => (
+                  <ListItem
+                    key={subPhase.id}
+                    sx={{
+                      padding: "8px 32px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    {subPhase.isDocument ? (
+                      <WordIcon style={{ marginRight: "8px" }} />
+                    ) : (
+                      <FolderIcon style={{ marginRight: "8px" }} />
+                    )}
+                    <ListItemText
+                      primary={
+                        subPhase.name || `Sub-Phase ${subPhase.serialNo}`
+                      }
+                      sx={{ fontSize: "14px", color: "#555" }}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            </Collapse>
+          </React.Fragment>
         ))}
       </List>
-
-      {/* Profile Section */}
-      <Box display="flex" alignItems="center">
-        <UserCircle
-          width="40px"
-          height="40px"
-          sx={{
-            borderRadius: "50%",
-            border: "2px solid white",
-          }}
-        />
-      </Box>
     </Box>
   );
 };
 
-export default LeftSidebar;
+export default Sidebar;

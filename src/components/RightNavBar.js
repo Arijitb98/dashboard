@@ -13,7 +13,7 @@ import { ReactComponent as Calenders } from "../assets/Icons/transactionCalander
 import { ReactComponent as ActivityLog } from "../assets/Icons/reports.svg";
 import { ReactComponent as More } from "../assets/Icons/ellipsis.svg";
 
-const RightSideBar = () => {
+const RightNavBar = () => {
   const menuItems = [
     { label: "Home", icon: <Home width={20} height={20} /> },
     { label: "Contents", icon: <Contents width={20} height={20} /> },
@@ -45,7 +45,7 @@ const RightSideBar = () => {
   return (
     <Box
       sx={{
-        width: "70px", // Adjust as per design
+        width: "70px",
         height: "100vh",
         display: "flex",
         flexDirection: "column",
@@ -93,4 +93,4 @@ const RightSideBar = () => {
   );
 };
 
-export default RightSideBar;
+export default RightNavBar;

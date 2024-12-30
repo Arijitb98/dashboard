@@ -11,9 +11,10 @@ const DataTable = ({ rows, onRowClick }) => {
     { field: "updateDate", headerName: "Update Date", width: 150 },
   ];
 
+  // Function to handle row click event
   const handleRowClick = (params) => {
-    const { id } = params.row; // Get the id of the clicked row
-    onRowClick(id); // Trigger the folder toggle for the clicked folder or sub-phase
+    const { id } = params.row; // Extract row id
+    onRowClick(id); // Call the onRowClick function passed via props with the row id
   };
 
   return (
@@ -22,7 +23,8 @@ const DataTable = ({ rows, onRowClick }) => {
         rows={rows}
         columns={columns}
         pageSize={10}
-        onRowClick={handleRowClick} // Add row click handler
+        onRowClick={handleRowClick}
+        disableRowSelectionOnClick
       />
     </div>
   );

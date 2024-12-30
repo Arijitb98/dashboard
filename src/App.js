@@ -1,53 +1,82 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Breadcrumbs from "./components/breadCrumbs";
-import LeftSidebar from "./components/LeftSidebar";
-import RightSideBar from "./components/RightSidebar";
-import Sidebar from "./components/Sidebar";
+import LeftNavBar from "./components/LeftNavBar";
+import RightNavBar from "./components/RightNavBar";
+import Sidebar from "./components/LeftSidebar";
 import SubPhaseDetailsSidebar from "./components/SubPhaseDetailsSidebar";
 import DataTable from "./components/dataTable";
 import Filters from "./components/filters";
-import { Box, IconButton } from "@mui/material";
-import { useSelector } from "react-redux";
-import { selectFolders } from "./redux/slices/folderSlice";
+import { Box, IconButton, CircularProgress, Alert } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchFolders,
+  selectFolders,
+  selectStatus,
+  selectError,
+} from "./redux/slices/folderSlice";
 import { ReactComponent as RightArrowIcon } from "./assets/Icons/rightArrow.svg";
 
 const App = () => {
-  const [expandedFolderId, setExpandedFolderId] = useState(null); // Start with no folder expanded
+  const [expandedFolderIds, setExpandedFolderIds] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [folderFilter, setFolderFilter] = useState("all"); // Default to show all folders
-  const [statusFilter, setStatusFilter] = useState("all"); // Default to show all statuses
-  const [dateRange, setDateRange] = useState([null, null]); // State for date range picker
-  const [responsiblePartyFilter, setResponsiblePartyFilter] = useState("all"); // State for responsible party filter
-  const [filterModalOpen, setFilterModalOpen] = useState(false); // State for modal
-  const folders = useSelector(selectFolders); // Get folders from the store
+  const [folderFilter, setFolderFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [dateRange, setDateRange] = useState([null, null]);
+  const [responsiblePartyFilter, setResponsiblePartyFilter] = useState("all");
+  const [filterModalOpen, setFilterModalOpen] = useState(false);
   const [selectedSubPhase, setSelectedSubPhase] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
 
+  // Selectors to get data from Redux store
+  const folders = useSelector(selectFolders);
+  const status = useSelector(selectStatus);
+  const error = useSelector(selectError);
+
+  const dispatch = useDispatch();
+
+  // Fetch folders data when the component mounts or when the status changes to 'idle'
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchFolders());
+    }
+  }, [dispatch, status]);
+
+  // Handle row click to set the selected sub-phase details
   const handleRowClick = (rowId) => {
+    // Find the sub-phase with the matching row ID
     const subPhase = flattenedPhases.find(
       (phase) => phase.id === rowId && phase.type === "subPhase"
     );
+    // If the sub-phase has a document, set it as the selected sub-phase
     if (subPhase?.document) {
       setSelectedSubPhase(subPhase);
       setIsSidebarOpen(true);
     }
   };
 
+  // Close the sidebar and clear the selected sub-phase
   const closeSidebar = () => {
     setIsSidebarOpen(false);
     setSelectedSubPhase(null);
   };
 
+  // Toggle the expanded state of a folder
   const handleFolderToggle = (folderId) => {
-    setExpandedFolderId((prevId) => (prevId === folderId ? null : folderId));
+    setExpandedFolderIds((prevIds) =>
+      prevIds.includes(folderId)
+        ? prevIds.filter((id) => id !== folderId)
+        : [...prevIds, folderId]
+    );
   };
 
+  // Flatten the phases and sub-phases into a single array
   const flattenPhases = () => {
     let phases = [];
     folders.forEach((folder) => {
+      // Add the main phase
       phases.push({
         id: folder.id,
         serialNo: folder.serialNo,
@@ -59,6 +88,7 @@ const App = () => {
         type: "folder",
         parentFolderId: null,
       });
+      // Add the sub-phases
       folder.subPhases?.forEach((subPhase) => {
         phases.push({
           id: subPhase.id,
@@ -83,13 +113,9 @@ const App = () => {
   };
 
   // Get unique folder names for folder filter
-  const uniqueFolderNames = Array.from(
-    new Set(
-      flattenedPhases
-        .filter((phase) => phase.type === "folder") // Include only phases
-        .map((phase) => phase.phase)
-    )
-  );
+  const uniqueFolderNames = flattenedPhases
+    .filter((phase) => phase.type === "folder")
+    .map((phase) => phase.phase);
 
   // Get unique status values for status filter
   const uniqueStatusValues = Array.from(
@@ -137,26 +163,27 @@ const App = () => {
 
   // Filter data based on expandedFolderId
   const rowsToDisplay = filteredPhases.filter(
-    (row) => row.parentFolderId === expandedFolderId || row.type === "folder"
+    (row) =>
+      expandedFolderIds.includes(row.parentFolderId) || row.type === "folder"
   );
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box display="flex" height="100vh" overflow="hidden">
-        {/* First Sidebar */}
+        {/* Navbar */}
         <Box
-          width={isSidebarVisible ? "250px" : "70px"} // Adjust width based on sidebar visibility
+          width={isSidebarVisible ? "250px" : "70px"}
           height="100%"
           backgroundColor="#00274d"
           boxShadow="2px 0px 5px rgba(0,0,0,0.1)"
           zIndex={2}
           position="relative"
-          transition="width 0.3s ease" // Smooth transition for sidebar width
+          transition="width 0.3s ease"
         >
-          <LeftSidebar />
+          <LeftNavBar />
         </Box>
 
-        {/* Second Sidebar */}
+        {/* Sidebar */}
         {isSidebarVisible && (
           <Box
             width="250px"
@@ -167,7 +194,7 @@ const App = () => {
             position="relative"
           >
             <Sidebar
-              expandedFolderId={expandedFolderId}
+              expandedFolderIds={expandedFolderIds}
               onFolderToggle={handleFolderToggle}
               onClose={toggleSidebar}
             />
@@ -176,13 +203,13 @@ const App = () => {
 
         {/* Main Content */}
         <Box
-          flex={1} // Fill remaining space
+          flex={1}
           display="flex"
           flexDirection="column"
           sx={{
-            transition: "padding-left 0.3s ease", // Smooth transition for padding
-            paddingLeft: isSidebarVisible ? "320px" : "70px", // Adjust padding based on sidebar visibility
-            paddingTop: "16px", // Add padding to prevent overlap with breadcrumbs
+            transition: "padding-left 0.3s ease",
+            paddingLeft: isSidebarVisible ? "320px" : "70px",
+            paddingTop: "16px",
           }}
         >
           {/* Sidebar Toggle Button */}
@@ -192,7 +219,7 @@ const App = () => {
               sx={{
                 position: "absolute",
                 top: "16px",
-                left: "80px", // Positioned to the right of the first sidebar
+                left: "80px",
                 zIndex: 10,
               }}
             >
@@ -236,6 +263,12 @@ const App = () => {
 
           {/* DataTable Section */}
           <Box flex={1} padding={2} overflow="auto">
+            {status === "loading" && <CircularProgress />}
+            {status === "failed" && (
+              <Alert severity="error">
+                {error || "An error occurred while fetching data."}
+              </Alert>
+            )}
             <DataTable
               rows={rowsToDisplay}
               onRowClick={(id) => {
@@ -246,22 +279,22 @@ const App = () => {
           </Box>
         </Box>
 
-        {/* Right Sidebar */}
+        {/* Right navbar */}
         <Box
           sx={{
             position: "absolute",
-            top: "80px", // Adjust to start below the breadcrumbs section
+            top: "80px",
             right: "0",
-            width: "70px", // Adjust width as needed
-            height: "calc(100vh - 80px)", // Ensure it takes up the rest of the screen height below breadcrumbs
+            width: "70px",
+            height: "calc(100vh - 80px)",
             backgroundColor: "#f5f5f5",
             boxShadow: "2px 0px 5px rgba(0,0,0,0.1)",
             zIndex: 2,
-            overflowY: "auto", // Optional: Allows scrolling if content overflows
-            transition: "width 0.3s ease", // Smooth transition for right sidebar
+            overflowY: "auto",
+            transition: "width 0.3s ease",
           }}
         >
-          <RightSideBar />
+          <RightNavBar />
         </Box>
 
         {/* SubPhaseDetailsSidebar */}

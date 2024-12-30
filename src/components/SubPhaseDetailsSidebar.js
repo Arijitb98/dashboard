@@ -2,7 +2,7 @@ import React from "react";
 import { Drawer, Box, Typography, Divider, Button } from "@mui/material";
 
 const SubPhaseDetailsSidebar = ({ open, onClose, subPhase }) => {
-  if (!subPhase) return null; // Render nothing if no sub-phase is selected
+  if (!subPhase) return null;
 
   return (
     <Drawer

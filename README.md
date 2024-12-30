@@ -1,70 +1,63 @@
-# Getting Started with Create React App
+Description
+This is a React-based application. Follow the steps below to run the project locally and set it up with or without the backend.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Prerequisites
+Before running the application, ensure you have the following installed:
 
-## Available Scripts
+Node.js (version 14 or higher)
+npm (Node Package Manager)
+Steps to Run Locally
 
-In the project directory, you can run:
+1. Clone the Repository
+   First, clone the repository to your local machine using the following command:
 
-### `npm start`
+bash
+Copy code
+git clone <repository-url> 2. Install Dependencies
+Navigate into the project directory and install the necessary dependencies:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+bash
+Copy code
+cd <project-directory>
+npm install 3. Optional: Set Up Backend API (If Applicable)
+If you want to use the backend for API calls, follow these steps:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Open the file src/redux/slices/folderslice.js.
+Uncomment lines 14 and 15 to enable the backend API configuration.
+Comment line 18 to disable any mock data or other default API configurations.
+js
+Copy code
+// In src/redux/slices/folderslice.js
 
-### `npm test`
+// Uncomment these lines to enable the backend API
+// const response = await axios.get('${API_BASE_URL}/records');
+// return response.data;
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+// Comment this line to disable mock data and use the backend
+// return dummyFolders;
+Note: Make sure you have the correct API URL, and that the backend is running.
 
-### `npm run build`
+4. Start the Application
+   Once you've set up the project and (optionally) configured the backend, start the development server:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+bash
+Copy code
+npm start
+This will start the application and open it in your default web browser. If it doesn't open automatically, navigate to:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+http://localhost:3000
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+5. Verify the Application
+   After the app has started, you should be able to see the application running locally at http://localhost:3000. You can start interacting with it and verify that everything is working as expected.
 
-### `npm run eject`
+Assumptions
+The dropdown filter in the app will only consider names of the phases (e.g., "Initiation", "Planning", etc.) and not of the sub-phases.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Troubleshooting
+If you encounter issues related to missing dependencies, try deleting the node_modules folder and package-lock.json file, then run npm install again.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+bash
+Copy code
+rm -rf node_modules package-lock.json
+npm install
+If the application fails to start or throws an error, check the terminal for error messages, which can often point to the cause of the problem.
