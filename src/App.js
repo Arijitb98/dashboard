@@ -124,7 +124,11 @@ const App = () => {
 
   // Get unique responsible parties
   const uniqueResponsibleParties = Array.from(
-    new Set(flattenedPhases.map((phase) => phase.responsibleParty))
+    new Set(
+      flattenedPhases
+        .filter((phase) => phase.type === "folder") // Include only phases
+        .map((phase) => phase.responsibleParty)
+    )
   );
 
   // Apply folder filter
