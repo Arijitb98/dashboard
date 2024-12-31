@@ -60,7 +60,8 @@ This will start the application and open it in your default web browser. If it d
 After the app has started, you should be able to see the application running locally at [http://localhost:3000](http://localhost:3000). You can start interacting with it and verify that everything is working as expected.
 
 ## Assumptions
-- The dropdown filter in the app will only consider the names of the phases (e.g., "Initiation", "Planning", etc.) and **not** of the sub-phases.
+- All the dropdown filters in the app will only consider and show the names/values from the phases (e.g., "Initiation", "Planning", etc.) and **not** from the sub-phases.
+- Search will only show results from phases when all the subphases are closed. Subphases will be searched when they are expanded.
 
 ## Troubleshooting
 If you encounter issues related to missing dependencies, try deleting the `node_modules` folder and `package-lock.json` file, then run `npm install` again.
