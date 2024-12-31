@@ -2,10 +2,42 @@ import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 
 const DataTable = ({ rows, onRowClick }) => {
+
+  const getStatusBackgroundColor = (status) => {
+    switch (status) {
+      case "Completed":
+        return "green";
+      case "Not Started":
+        return "red";
+      case "Continuing":
+        return "yellow";
+      default:
+        return "gray";
+    }
+  };
+  
   const columns = [
     { field: "serialNo", headerName: "#", width: 100 },
     { field: "phase", headerName: "Phase", width: 200 },
-    { field: "status", headerName: "Status", width: 150 },
+    {
+      field: "status",
+      headerName: "Status",
+      width: 150,
+      renderCell: (params) => (
+        <div
+          style={{
+            backgroundColor: getStatusBackgroundColor(params.value),
+            color: "white",
+            padding: "4px 8px",
+            borderRadius: "4px",
+            textAlign: "center",
+            width: "100%",
+          }}
+        >
+          {params.value || "Undefined"}
+        </div>
+      ),
+    },    
     { field: "document", headerName: "Document", width: 150 },
     { field: "responsibleParty", headerName: "Responsible Party", width: 200 },
     { field: "updateDate", headerName: "Update Date", width: 150 },
