@@ -65,7 +65,13 @@ const Sidebar = ({ expandedFolderIds, onFolderToggle, onClose }) => {
         >
           Transaction Contents
         </ListSubheader>
-        <IconButton onClick={onClose} sx={{ marginRight: "8px" }}>
+        <IconButton
+          onClick={onClose}
+          sx={{ marginRight: "8px" }}
+          style={{
+            transform: "rotate(180deg)",
+          }}
+        >
           <RightArrowIcon width={20} height={20} />
         </IconButton>
       </Box>
@@ -104,7 +110,12 @@ const Sidebar = ({ expandedFolderIds, onFolderToggle, onClose }) => {
           <Box fontWeight="bold" fontSize="16px">
             {folders.reduce(
               (total, folder) =>
-                total + (folder.subPhases?.documentsCount || 0),
+                total +
+                (folder.subPhases?.reduce(
+                  (subTotal, subPhase) =>
+                    subTotal + (subPhase.document != null ? 1 : 0),
+                  0
+                ) || 0),
               0
             )}
           </Box>
@@ -115,7 +126,7 @@ const Sidebar = ({ expandedFolderIds, onFolderToggle, onClose }) => {
       </Box>
 
       {/* Folder List */}
-      <List sx={{ flex: 1, overflowY: "auto" }}>
+      <List sx={{ flex: 1 }}>
         {folders.map((folder) => (
           <React.Fragment key={folder.id}>
             <ListItem

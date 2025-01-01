@@ -16,7 +16,7 @@ import {
   selectStatus,
   selectError,
 } from "./redux/slices/folderSlice";
-import { ReactComponent as RightArrowIcon } from "./assets/Icons/rightArrow.svg";
+import "./App.css";
 
 const App = () => {
   const [expandedFolderIds, setExpandedFolderIds] = useState([]);
@@ -46,11 +46,21 @@ const App = () => {
 
   // Handle row click to set the selected sub-phase details
   const handleRowClick = (rowId) => {
-    // Find the sub-phase with the matching row ID
+    // Handle phase row click to expand/collapse subphases if needed
     const subPhase = flattenedPhases.find(
       (phase) => phase.id === rowId && phase.type === "subPhase"
     );
-    // If the sub-phase has a document, set it as the selected sub-phase
+
+    if (subPhase?.document) {
+      setSelectedSubPhase(subPhase);
+    }
+  };
+
+  const openSidebar = (params) => {
+    const subPhase = flattenedPhases.find(
+      (phase) => phase.id === params && phase.type === "subPhase"
+    );
+
     if (subPhase?.document) {
       setSelectedSubPhase(subPhase);
       setIsSidebarOpen(true);
@@ -82,7 +92,7 @@ const App = () => {
         serialNo: folder.serialNo,
         phase: folder.phase || `Stage ${folder.serialNo}`,
         status: folder.status || "N/A",
-        document: folder.document || "-",
+        document: folder.document,
         responsibleParty: folder.responsibleParty || "N/A",
         updateDate: folder.updateDate || "N/A",
         type: "folder",
@@ -95,7 +105,7 @@ const App = () => {
           serialNo: subPhase.serialNo,
           phase: subPhase.name || `Sub-Phase ${subPhase.serialNo}`,
           status: subPhase.status || "N/A",
-          document: subPhase.document || "N/A",
+          document: subPhase.document,
           responsibleParty: subPhase.responsibleParty || "N/A",
           updateDate: subPhase.updateDate || "N/A",
           parentFolderId: folder.id,
@@ -124,7 +134,11 @@ const App = () => {
 
   // Get unique responsible parties
   const uniqueResponsibleParties = Array.from(
-    new Set(flattenedPhases.map((phase) => phase.responsibleParty))
+    new Set(
+      flattenedPhases
+        .filter((phase) => phase.type === "folder") // Include only phases
+        .map((phase) => phase.responsibleParty)
+    )
   );
 
   // Apply folder filter
@@ -172,7 +186,7 @@ const App = () => {
       <Box display="flex" height="100vh" overflow="hidden">
         {/* Navbar */}
         <Box
-          width={isSidebarVisible ? "250px" : "70px"}
+          // width={isSidebarVisible ? "250px" : "70px"}
           height="100%"
           backgroundColor="#00274d"
           boxShadow="2px 0px 5px rgba(0,0,0,0.1)"
@@ -208,32 +222,18 @@ const App = () => {
           flexDirection="column"
           sx={{
             transition: "padding-left 0.3s ease",
-            paddingLeft: isSidebarVisible ? "320px" : "70px",
-            paddingTop: "16px",
           }}
         >
-          {/* Sidebar Toggle Button */}
-          {!isSidebarVisible && (
-            <IconButton
-              onClick={toggleSidebar}
-              sx={{
-                position: "absolute",
-                top: "16px",
-                left: "80px",
-                zIndex: 10,
-              }}
-            >
-              <RightArrowIcon width={20} height={20} />
-            </IconButton>
-          )}
-
           {/* Breadcrumbs Section */}
           <Box
             padding="16px"
             borderBottom="1px solid #ddd"
             backgroundColor="#f9f9f9"
           >
-            <Breadcrumbs />
+            <Breadcrumbs
+              isSidebarVisible={isSidebarVisible}
+              toggleSidebar={toggleSidebar}
+            />
           </Box>
 
           {/* Filters Section */}
@@ -275,6 +275,9 @@ const App = () => {
                 handleRowClick(id);
                 handleFolderToggle(id);
               }}
+              onDocumentClick={(params) => {
+                openSidebar(params);
+              }}
             />
           </Box>
         </Box>
@@ -282,15 +285,10 @@ const App = () => {
         {/* Right navbar */}
         <Box
           sx={{
-            position: "absolute",
-            top: "80px",
-            right: "0",
-            width: "70px",
-            height: "calc(100vh - 80px)",
+            width: "80px",
             backgroundColor: "#f5f5f5",
             boxShadow: "2px 0px 5px rgba(0,0,0,0.1)",
             zIndex: 2,
-            overflowY: "auto",
             transition: "width 0.3s ease",
           }}
         >

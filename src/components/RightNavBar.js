@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 
 // Import SVGs as React components
@@ -14,6 +14,8 @@ import { ReactComponent as ActivityLog } from "../assets/Icons/reports.svg";
 import { ReactComponent as More } from "../assets/Icons/ellipsis.svg";
 
 const RightNavBar = () => {
+  const [selectedItem, setSelectedItem] = useState("Contents");
+
   const menuItems = [
     { label: "Home", icon: <Home width={20} height={20} /> },
     { label: "Contents", icon: <Contents width={20} height={20} /> },
@@ -45,8 +47,8 @@ const RightNavBar = () => {
   return (
     <Box
       sx={{
-        width: "70px",
-        height: "100vh",
+        width: "80px",
+        height: "100%",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -55,35 +57,41 @@ const RightNavBar = () => {
       }}
     >
       {/* Menu Items */}
-      <List sx={{ flexGrow: 1, width: "100%", padding: 0 }}>
+      <List
+        sx={{
+          flexGrow: 1,
+          width: "100%",
+          padding: 0,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
+      >
         {menuItems.map((item, index) => (
           <ListItem
-            button
             key={index}
             sx={{
               flexDirection: "column",
               alignItems: "center",
               padding: "12px 0",
-              color: "white",
-              "&:hover": { backgroundColor: "#004080" },
+              "&:hover": { backgroundColor: "#E8F4FF" },
+              backgroundColor:
+                selectedItem === item.label ? "#E8F4FF" : "transparent", // Highlight selected item
+              borderRadius: "8px",
             }}
+            button
+            onClick={() => setSelectedItem(item.label)} // Set the clicked item as selected
           >
-            <ListItemIcon
-              sx={{
-                justifyContent: "center",
-                minWidth: "unset",
-                marginBottom: "8px",
-              }}
-            >
-              {item.icon}
-            </ListItemIcon>
+            {/* Change icon color based on selected state */}
+            {React.cloneElement(item.icon, {
+              fill: selectedItem === item.label ? "#1F94FF" : "inherit", // Change icon color for selected item
+            })}
             <ListItemText
               primary={item.label}
-              sx={{
+              primaryTypographyProps={{
                 textAlign: "center",
-                fontSize: "12px",
-                color: "white",
-                fontWeight: "500",
+                fontSize: "8px",
+                color: selectedItem === item.label ? "#1F94FF" : "inherit", // Change text color for selected item
               }}
             />
           </ListItem>

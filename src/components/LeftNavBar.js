@@ -14,27 +14,42 @@ import { ReactComponent as MuamelatLogo } from "../assets/Icons/Muamelat logo.sv
 
 const LeftNavBar = () => {
   const menuItems = [
-    { label: "Panorama", icon: <PanoramaIcon width={20} height={20} /> },
-    { label: "Transaction", icon: <TransactionIcon width={20} height={20} /> },
-    { label: "Documents", icon: <DocumentsIcon width={20} height={20} /> },
-    { label: "E-Mails", icon: <EmailsIcon width={20} height={20} /> },
-    { label: "Reports", icon: <ReportsIcon width={20} height={20} /> },
+    {
+      label: "Panorama",
+      icon: <PanoramaIcon width={20} height={20} fill="white" />,
+    },
+    {
+      label: "Transaction",
+      icon: <TransactionIcon width={20} height={20} fill="white" />,
+    },
+    {
+      label: "Documents",
+      icon: <DocumentsIcon width={20} height={20} fill="white" />,
+    },
+    {
+      label: "E-Mails",
+      icon: <EmailsIcon width={20} height={20} fill="white" />,
+    },
+    {
+      label: "Reports",
+      icon: <ReportsIcon width={20} height={20} fill="white" />,
+    },
     {
       label: "Management Panel",
-      icon: <ManagementPanelIcon width={20} height={20} />,
+      icon: <ManagementPanelIcon width={20} height={20} fill="white" />,
     },
     {
       label: "Transaction Calendar",
-      icon: <TransactionCalendarIcon width={20} height={20} />,
+      icon: <TransactionCalendarIcon width={20} height={20} fill="white" />,
     },
   ];
 
   return (
     <Box
       sx={{
-        width: "70px",
+        width: "80px",
         backgroundColor: "#00274d",
-        height: "100vh",
+        height: "95vh",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -57,26 +72,17 @@ const LeftNavBar = () => {
               flexDirection: "column",
               alignItems: "center",
               padding: "12px 0",
-              color: "white",
               "&:hover": { backgroundColor: "#004080" },
             }}
           >
-            <ListItemIcon
-              sx={{
-                justifyContent: "center",
-                minWidth: "unset",
-                marginBottom: "8px",
-              }}
-            >
-              {item.icon}
-            </ListItemIcon>
+            {item.icon}
             <ListItemText
               primary={item.label}
-              sx={{
+              primaryTypographyProps={{
                 textAlign: "center",
                 fontSize: "12px",
                 color: "white",
-                fontWeight: "500",
+                margin: "5px",
               }}
             />
           </ListItem>

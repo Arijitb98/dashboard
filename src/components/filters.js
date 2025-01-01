@@ -157,7 +157,7 @@ const Filters = ({
               onChange={(e) => setResponsiblePartyFilter(e.target.value)}
               label="Responsible Party"
             >
-              <MenuItem value="all">All Parties</MenuItem>
+              <MenuItem value="all">Everyone</MenuItem>
               {uniqueResponsibleParties.map((party, index) => (
                 <MenuItem key={index} value={party}>
                   {party}

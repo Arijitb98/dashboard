@@ -1,0 +1,12 @@
+body {
+  margin: 0px !important;
+}
+
+body {
+  font-family: "Mecellem", sans-serif;
+}
+
+/* fallback font */
+* {
+  font-family: "Mecellem", sans-serif;
+}
