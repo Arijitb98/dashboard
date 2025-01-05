@@ -82,32 +82,33 @@ const App = () => {
     );
   };
 
-  // Flatten the phases and sub-phases into a single array
+  // Flatten phases and sub-phases into a single array
   const flattenPhases = () => {
     let phases = [];
     folders.forEach((folder) => {
       // Add the main phase
       phases.push({
         id: folder.id,
-        serialNo: folder.serialNo,
-        phase: folder.phase || `Stage ${folder.serialNo}`,
+        serialNo: folder.serialno,
+        phase: folder.phase || `Stage ${folder.serialno}`,
         status: folder.status || "N/A",
         document: folder.document,
-        responsibleParty: folder.responsibleParty || "N/A",
-        updateDate: folder.updateDate || "N/A",
+        responsibleParty: folder.responsibleparty || "N/A",
+        updateDate: folder.updatedate || "N/A",
         type: "folder",
         parentFolderId: null,
       });
+
       // Add the sub-phases
-      folder.subPhases?.forEach((subPhase) => {
+      folder.subphases?.forEach((subPhase) => {
         phases.push({
-          id: subPhase.id,
-          serialNo: subPhase.serialNo,
-          phase: subPhase.name || `Sub-Phase ${subPhase.serialNo}`,
+          id: `${folder.id}-${subPhase.serialno}`,
+          serialNo: subPhase.serialno,
+          phase: subPhase.phase || `Sub-Phase ${subPhase.serialno}`,
           status: subPhase.status || "N/A",
           document: subPhase.document,
-          responsibleParty: subPhase.responsibleParty || "N/A",
-          updateDate: subPhase.updateDate || "N/A",
+          responsibleParty: subPhase.responsibleparty || "N/A",
+          updateDate: subPhase.updatedate || "N/A",
           parentFolderId: folder.id,
           type: "subPhase",
         });

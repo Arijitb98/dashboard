@@ -41,7 +41,7 @@ const DataTable = ({ rows, onRowClick, onDocumentClick }) => {
         const folder = folders.find((folder) => folder.id === params.id);
 
         // Get the count of subphases for the found folder
-        const subPhasesCount = folder ? folder.subPhases.length : 0;
+        const subPhasesCount = folder ? folder.subphases.length : 0;
 
         return (
           <div style={{ display: "flex", flexDirection: "column" }}>

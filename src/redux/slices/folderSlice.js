@@ -11,11 +11,11 @@ export const fetchFolders = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       // The lines below for using the actual API request
-      // const response = await axios.get(`${API_BASE_URL}/records`);
-      // return response.data;
+      const response = await axios.get(`${API_BASE_URL}/records`);
+      return response.data;
 
       // Line below for using dummy data for testing purposes
-      return dummyFolders;
+      // return dummyFolders;
     } catch (error) {
       // Return error message if the request fails
       return rejectWithValue(

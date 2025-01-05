@@ -98,7 +98,7 @@ const Sidebar = ({ expandedFolderIds, onFolderToggle, onClose }) => {
         <Box textAlign="center">
           <Box fontWeight="bold" fontSize="16px">
             {folders.reduce(
-              (total, folder) => total + (folder.subPhases?.length || 0),
+              (total, folder) => total + (folder.subphases?.length || 0),
               0
             )}
           </Box>
@@ -111,9 +111,9 @@ const Sidebar = ({ expandedFolderIds, onFolderToggle, onClose }) => {
             {folders.reduce(
               (total, folder) =>
                 total +
-                (folder.subPhases?.reduce(
-                  (subTotal, subPhase) =>
-                    subTotal + (subPhase.document != null ? 1 : 0),
+                (folder.subphases?.reduce(
+                  (subTotal, subphase) =>
+                    subTotal + (subphase.document != null ? 1 : 0),
                   0
                 ) || 0),
               0
