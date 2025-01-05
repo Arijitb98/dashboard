@@ -64,6 +64,7 @@ const Filters = ({
           variant="outlined"
           fullWidth
           value={searchQuery}
+          className="filter-search"
           onChange={(e) => setSearchQuery(e.target.value)}
         />
 

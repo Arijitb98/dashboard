@@ -121,9 +121,14 @@ const SubPhaseDetailsSidebar = ({ open, onClose, subPhase }) => {
                 </ListItemAvatar>
                 <ListItemText
                   primary={
-                    <Typography variant="subtitle2" fontWeight="bold">
-                      {item.version} {item.current && "(Current Version)"}
-                    </Typography>
+                    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                      <Typography variant="subtitle2" fontWeight="bold">
+                        {item.version} {item.current && "(Current Version)"}
+                      </Typography>
+                      <Typography variant="caption">
+                        {item.size}
+                      </Typography>
+                    </Box>
                   }
                   secondary={
                     <>
@@ -149,9 +154,9 @@ const SubPhaseDetailsSidebar = ({ open, onClose, subPhase }) => {
                   }
                 />
                 <Box display="flex" alignItems="center">
-                  <Typography variant="caption" color="textSecondary" mr={1}>
+                  {/* <Typography variant="caption" color="textSecondary" mr={1}>
                     {item.size}
-                  </Typography>
+                  </Typography> */}
                   <IconButton size="small">
                     <MoreVertIcon />
                   </IconButton>

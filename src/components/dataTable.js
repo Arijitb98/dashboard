@@ -65,8 +65,10 @@ const DataTable = ({ rows, onRowClick, onDocumentClick }) => {
       headerName: "Status",
       flex: 1,
       minWidth: 150,
+      align: "center",
       renderCell: (params) => (
         <div
+          className="status"
           style={{
             backgroundColor: getStatusBackgroundColor(params.value),
             color: "white",
@@ -138,6 +140,7 @@ const DataTable = ({ rows, onRowClick, onDocumentClick }) => {
       renderCell: (params) => {
         return (
           <div
+          className="responsible-party"
             style={{
               backgroundColor: "#F1F5F9",
               padding: "4px 8px",
