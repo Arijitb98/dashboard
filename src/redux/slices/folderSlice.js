@@ -3,18 +3,18 @@ import { dummyFolders } from "../DummyData/dummyData";
 import axios from "axios";
 
 // API Base URL
-const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = process.env.REACT_APP_BACKEND_API_URL;
 
 // Thunk to fetch folders and phases
 export const fetchFolders = createAsyncThunk(
   "folders/fetchFolders",
   async (_, { rejectWithValue }) => {
     try {
-      // Uncomment the line below to use the actual API request
+      // The lines below for using the actual API request
       // const response = await axios.get(`${API_BASE_URL}/records`);
       // return response.data;
 
-      // Returning dummy data for testing purposes
+      // Line below for using dummy data for testing purposes
       return dummyFolders;
     } catch (error) {
       // Return error message if the request fails
